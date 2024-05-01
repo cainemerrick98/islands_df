@@ -1,6 +1,6 @@
 import unittest
-from finding_islands import IslandFinderBfs
-from islandsdf import IslandsDf
+import finding_islands
+import islandsdf
 
 class TestIslandFinderBfs(unittest.TestCase):
     
@@ -12,9 +12,7 @@ class TestIslandFinderBfs(unittest.TestCase):
             [0, 0, 0, 1, 1],
             [0, 0, 0, 1, 1]
             ]
-
         self.empty_checked = [[0 for i in j] for j in self.sheet]
-        self.island_finder = IslandFinderBfs()
         return super().setUp()
     
     def test_find_connected_nodes(self):
@@ -29,9 +27,8 @@ class TestIslandFinderBfs(unittest.TestCase):
         curr_node = (0, 0)
         expected_result = [(1, 0), (0, 1)]
 
-        island_finder = IslandFinderBfs()
         
-        connections = island_finder._IslandFinderBfs__find_connected_nodes(self.sheet, curr_node, self.empty_checked)
+        connections = finding_islands.find_connected_nodes(self.sheet, curr_node, self.empty_checked)
 
         self.assertListEqual(expected_result, connections)
 
@@ -40,7 +37,7 @@ class TestIslandFinderBfs(unittest.TestCase):
         If find tables is passed an empty array (e.g. a sheet with no data) it should return an empty
         array
         """
-        self.assertListEqual([], self.island_finder.find_tables(sheet=[]))
+        self.assertListEqual([], finding_islands.find_tables(sheet=[]))
     
     def test_find_tables_non_empty_array(self):
         """
@@ -57,7 +54,7 @@ class TestIslandFinderBfs(unittest.TestCase):
             [2, 3, 4, 4]
         ]
 
-        tables_coords = self.island_finder.find_tables(self.sheet)
+        tables_coords = finding_islands.find_tables(self.sheet)
         self.assertListEqual(expected_result, tables_coords)
 
 
@@ -65,7 +62,6 @@ class TestIslandsDf(unittest.TestCase):
 
     def setUp(self) -> None:
         self.path = r'C:\Users\caine\OneDrive\Documents\islands_df\test_data_1.csv'
-        self.islands_df = IslandsDf()
     
     def test_read_file(self):
         """
@@ -86,7 +82,7 @@ class TestIslandsDf(unittest.TestCase):
             ['', '', '', '', 'VW', 'Caddy', 60], 
             ['', '', '', '', 'Seat', 'IBIZA', 40]
             ]
-        data = self.islands_df.read_file(self.path)
+        data = islandsdf.read_file(self.path)
         self.assertListEqual(data, expected_data)
 
     def test_transform_data(self):
@@ -107,15 +103,15 @@ class TestIslandsDf(unittest.TestCase):
             [0, 0, 0, 0, 1, 1, 1],
             [0, 0, 0, 0, 1, 1, 1],
             ]
-        file_data = self.islands_df.read_file(self.path)
-        transformed_data = self.islands_df.transform_data(file_data)
+        file_data = islandsdf.read_file(self.path)
+        transformed_data = islandsdf.transform_data(file_data)
         self.assertListEqual(transformed_data, expected_data)
 
     def test_extract_tables(self):
         """
         Should return two dataframes with the structure as below
         """
-        dataframes = self.islands_df.extract_tables(self.path)
+        dataframes = islandsdf.extract_tables(self.path)
         self.assertEqual(2, len(dataframes))
 
         df1, df2 = dataframes
